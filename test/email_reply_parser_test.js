@@ -5,13 +5,13 @@ var _  = require('underscore');
 var EmailReplyParser = require('../lib/emailreplyparser').EmailReplyParser;
 
 function get_email(name) {
-	var data = fs.readFileSync(__dirname + '/emails/' + name + '.txt', 'ascii');
+	var data = fs.readFileSync(__dirname + '/emails/' + name + '.txt', 'utf-8');
 
 	return EmailReplyParser.read(data);
 }
 
 function get_raw_email(name) {
-  	return fs.readFileSync(__dirname + '/emails/' + name + '.txt', 'ascii');
+  	return fs.readFileSync(__dirname + '/emails/' + name + '.txt', 'utf-8');
 }
 
 exports.test_reads_simple_body = function(test){
@@ -176,6 +176,18 @@ exports.test_parse_reply = function(test){
     body = get_raw_email('email_1_2');
     test.equal(EmailReplyParser.read(body).visible_text(), EmailReplyParser.parse_reply(body));
     test.done();
+}
+
+exports.test_accents_in_name = function(test){
+		body = get_raw_email('email_accents');
+		test.equal("Lorem ipsum dolor sit amet, consectetur adipiscing elit.", EmailReplyParser.parse_reply(body));
+		test.done();
+}
+
+exports.test_parse_out_sent_from_iPhone_french = function(test){
+		body = get_raw_email('email_iPhone_french');
+		test.equal("Here is another email", EmailReplyParser.parse_reply(body));
+		test.done();
 }
 
 exports.test_correctly_reads_top_post_when_line_starts_with_On = function(test){
