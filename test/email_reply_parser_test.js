@@ -228,6 +228,12 @@ exports.test_parse_out_send_from_french = function(test){
     test.done();
 };
 
+exports.test_parse_out_send_from_spanish = function(test){
+    var body = get_raw_email('email_spanish');
+    test.equal("Muchas gracias.", EmailReplyParser.parse_reply(body));
+    test.done();
+};
+
 exports.test_parse_out_send_from_hotmail = function(test){
     var body = get_raw_email('email_hotmail');
     test.equal("I replied", EmailReplyParser.parse_reply(body));
