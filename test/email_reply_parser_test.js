@@ -15,31 +15,27 @@ function get_raw_email(name) {
 
 exports.test_reads_simple_body = function(test){
   var reply = get_email('email_1_1');
+  test.equal(2, reply.fragments.length);
 
-  test.equal(3, reply.fragments.length);
+	test.deepEqual([false, false], _.map(reply.fragments, function(f) { return f.quoted; }));
+	test.deepEqual([false, true], _.map(reply.fragments, function(f) { return f.hidden; }));
 
-	test.deepEqual([false, false, false], _.map(reply.fragments, function(f) { return f.quoted; }));
-	test.deepEqual([false, true, true], _.map(reply.fragments, function(f) { return f.signature; }));
-	test.deepEqual([false, true, true], _.map(reply.fragments, function(f) { return f.hidden; }));
+  test.equal("Hi folks\n\nWhat is the best way to clear a Riak bucket of all key, values after\nrunning a test?\nI am currently using the Java HTTP API.\n\n-Abhishek Kona\n\n", reply.fragments[0].to_s());
 
-  test.equal("Hi folks\n\nWhat is the best way to clear a Riak bucket of all key, values after\nrunning a test?\nI am currently using the Java HTTP API.\n", reply.fragments[0].to_s());
-
-  test.equal("-Abhishek Kona\n\n", reply.fragments[1].to_s());
 	test.done();
 };
 
 exports.test_reads_top_post = function(test){
     reply = get_email('email_1_3');
-    test.equal(5, reply.fragments.length);
+    test.equal(4, reply.fragments.length);
 
-    test.deepEqual([false, false, true, false, false], _.map(reply.fragments, function(f) { return f.quoted; }));
-    test.deepEqual([false, true, true, true, true], _.map(reply.fragments, function(f) { return f.hidden; }));
-    test.deepEqual([false, true, false, false, true], _.map(reply.fragments, function(f) { return f.signature; }));
+    test.deepEqual([false, true, false, false], _.map(reply.fragments, function(f) { return f.quoted; }));
+    test.deepEqual([false, true, true, true], _.map(reply.fragments, function(f) { return f.hidden; }));
+    test.deepEqual([false, false, false, true], _.map(reply.fragments, function(f) { return f.signature; }));
 
     test.ok((new RegExp('^Oh thanks.\n\nHaving')).test(reply.fragments[0].to_s()));
-    test.ok((new RegExp('^-A')).test(reply.fragments[1].to_s()));
-    test.ok((/^On [^\:]+\:/m).test(reply.fragments[2].to_s()));
-    test.ok((new RegExp('^_')).test(reply.fragments[4].to_s()));
+    test.ok((/^On [^\:]+\:/m).test(reply.fragments[1].to_s()));
+    test.ok((new RegExp('^_')).test(reply.fragments[3].to_s()));
     test.done();
 };
 
@@ -95,14 +91,13 @@ exports.test_a_complex_body_with_only_one_fragment = function(test){
 
 exports.test_reads_email_with_correct_signature = function(test){
     var reply = get_email('correct_sig');
-
     test.equal(2, reply.fragments.length);
 
     test.deepEqual([false, false], _.map(reply.fragments, function(f) { return f.quoted; }));
 		test.deepEqual([false, true], _.map(reply.fragments, function(f) { return f.signature; }));
 		test.deepEqual([false, true], _.map(reply.fragments, function(f) { return f.hidden; }));
 
-    test.ok((new RegExp('^-- \nrick')).test(reply.fragments[1].to_s()));
+    test.ok((new RegExp('^--\\s*\\nrick')).test(reply.fragments[1].to_s()));
     test.done();
 };
 
@@ -137,7 +132,7 @@ exports.test_returns_only_the_visible_fragments_as_a_string = function(test){
 
 exports.test_parse_out_just_top_for_outlook_reply = function(test){
     var body = get_raw_email('email_2_1');
-    test.equal("Outlook with a reply", EmailReplyParser.parse_reply(body));
+		test.equal("Outlook with a reply", EmailReplyParser.parse_reply(body));
     test.done();
 };
 
@@ -191,16 +186,15 @@ exports.test_parse_out_sent_from_iPhone_french = function(test){
 
 exports.test_correctly_reads_top_post_when_line_starts_with_On = function(test){
     var reply = get_email('email_1_7');
-    test.equal(5, reply.fragments.length);
+    test.equal(4, reply.fragments.length);
 
-    test.deepEqual([false, false, true, false, false], _.map(reply.fragments, function(f) { return f.quoted; }));
-    test.deepEqual([false, true, true, true, true], _.map(reply.fragments, function(f) { return f.hidden; }));
-    test.deepEqual([false, true, false, false, true], _.map(reply.fragments, function(f) { return f.signature; }));
+    test.deepEqual([false, true, false, false], _.map(reply.fragments, function(f) { return f.quoted; }));
+    test.deepEqual([false, true, true, true], _.map(reply.fragments, function(f) { return f.hidden; }));
+    test.deepEqual([false, false, false, true], _.map(reply.fragments, function(f) { return f.signature; }));
 
     test.ok((new RegExp('^Oh thanks.\n\nOn the')).test(reply.fragments[0].to_s()));
-    test.ok((new RegExp('^-A')).test(reply.fragments[1].to_s()));
-    test.ok((/^On [^\:]+\:/m).test(reply.fragments[2].to_s()));
-    test.ok((new RegExp('^_')).test(reply.fragments[4].to_s()));
+    test.ok((/^On [^\:]+\:/m).test(reply.fragments[1].to_s()));
+    test.ok((new RegExp('^_')).test(reply.fragments[3].to_s()));
     test.done();
 };
 
