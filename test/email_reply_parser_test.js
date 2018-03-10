@@ -233,3 +233,9 @@ exports.test_parse_out_send_from_hotmail = function(test){
     test.equal("I replied", EmailReplyParser.parse_reply(body));
     test.done();
 }
+
+exports.test_email_with_emdash = function(test){
+    var body = get_raw_email('email_em_dash');
+    test.equal("Hey There,\n\nSounds Good!\n\nBest,\nMe", EmailReplyParser.parse_reply(body));
+    test.done();
+}
