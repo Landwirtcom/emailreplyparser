@@ -239,3 +239,15 @@ exports.test_email_with_emdash = function(test){
     test.equal("Hey There,\n\nSounds Good!\n\nBest,\nMe", EmailReplyParser.parse_reply(body));
     test.done();
 }
+
+exports.test_email_with_reply_header_response = function(test){
+    var reply = get_email('response_with_reply_header');
+    test.equal(3, reply.fragments.length);
+
+    test.deepEqual([false, true, false], _.map(reply.fragments, function(f) { return f.quoted; }));
+    test.deepEqual([false, true, true], _.map(reply.fragments, function(f) { return f.hidden; }));
+    test.deepEqual([false, false, false], _.map(reply.fragments, function(f) { return f.signature; }));
+
+    test.ok((new RegExp('^11 would be best.*wrote:$')).test(reply.fragments[0].to_s()));
+    test.done();
+}

@@ -1,3 +1,5 @@
 On a 60% de test sur toute l'Infra
 
-Le 14 oct. 2016 7:54 PM, "www.acme.com" <session_7d0qe51e-4c4-4q24-c90f-8cbd5bf0d93f+in@mail.test.im> a écrit:
+Le Aug 22, 2011, at 7:37 PM, defunkt<reply@reply.github.com> a écrit:
+
+> Loader seems to be working well.
