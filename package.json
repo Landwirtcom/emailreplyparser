@@ -1,6 +1,6 @@
 {
-  "name": "emailreplyparser",
-  "version": "0.1.2",
+  "name": "breezy-emailreplyparser",
+  "version": "0.2.0",
   "description": "Node.js Port of GitHub's email_reply_parser.rb with enhancements from forks.",
   "author": "Kaveh Nowroozi <swervogm@gmail.com>",
   "repository": {

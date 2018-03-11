@@ -2,11 +2,11 @@ var fs = require('fs');
 
 var _  = require('underscore');
 
-var EmailReplyParser = require('../lib/emailreplyparser').EmailReplyParser;
+var BreezyEmailReplyParser = require('../lib/emailreplyparser').BreezyEmailReplyParser;
 
 function get_email(name) {
 	var data = fs.readFileSync(__dirname + '/emails/' + name + '.txt', 'utf-8');
-	return EmailReplyParser.read(data);
+	return BreezyEmailReplyParser.read(data);
 }
 
 function get_raw_email(name) {
@@ -112,7 +112,7 @@ exports.test_deals_with_multiline_reply_headers = function(test){
 
 exports.test_does_not_modify_input_string = function(test){
     var original = "The Quick Brown Fox Jumps Over The Lazy Dog";
-    EmailReplyParser.read(original);
+    BreezyEmailReplyParser.read(original);
     test.equal("The Quick Brown Fox Jumps Over The Lazy Dog", original);
     test.done();
 };
@@ -132,55 +132,55 @@ exports.test_returns_only_the_visible_fragments_as_a_string = function(test){
 
 exports.test_parse_out_just_top_for_outlook_reply = function(test){
     var body = get_raw_email('email_2_1');
-		test.equal("Outlook with a reply", EmailReplyParser.parse_reply(body));
+		test.equal("Outlook with a reply", BreezyEmailReplyParser.parse_reply(body));
     test.done();
 };
 
 exports.test_parse_out_sent_from_iPhone = function(test){
     var body = get_raw_email('email_iPhone');
-    test.equal("Here is another email", EmailReplyParser.parse_reply(body));
+    test.equal("Here is another email", BreezyEmailReplyParser.parse_reply(body));
     test.done();
 };
 
 exports.test_parse_out_sent_from_BlackBerry = function(test){
     var body = get_raw_email('email_BlackBerry');
-    test.equal("Here is another email", EmailReplyParser.parse_reply(body));
+    test.equal("Here is another email", BreezyEmailReplyParser.parse_reply(body));
     test.done();
 };
 
 exports.test_parse_out_send_from_multiword_mobile_device = function(test){
     var body = get_raw_email('email_multi_word_sent_from_my_mobile_device');
-    test.equal("Here is another email", EmailReplyParser.parse_reply(body));
+    test.equal("Here is another email", BreezyEmailReplyParser.parse_reply(body));
     test.done();
 };
 
 exports.test_do_not_parse_out_send_from_in_regular_sentence = function(test){
     var body = get_raw_email('email_sent_from_my_not_signature');
-    test.equal("Here is another email\n\nSent from my desk, is much easier then my mobile phone.", EmailReplyParser.parse_reply(body));
+    test.equal("Here is another email\n\nSent from my desk, is much easier then my mobile phone.", BreezyEmailReplyParser.parse_reply(body));
     test.done();
 };
 
 exports.test_retains_bullets = function(test){
     var body = get_raw_email('email_bullets');
-    test.equal("test 2 this should list second\n\nand have spaces\n\nand retain this formatting\n\n\n   - how about bullets\n   - and another", EmailReplyParser.parse_reply(body));
+    test.equal("test 2 this should list second\n\nand have spaces\n\nand retain this formatting\n\n\n   - how about bullets\n   - and another", BreezyEmailReplyParser.parse_reply(body));
     test.done();
 };
 
 exports.test_parse_reply = function(test){
     var body = get_raw_email('email_1_2');
-    test.equal(EmailReplyParser.read(body).visible_text(), EmailReplyParser.parse_reply(body));
+    test.equal(BreezyEmailReplyParser.read(body).visible_text(), BreezyEmailReplyParser.parse_reply(body));
     test.done();
 };
 
 exports.test_accents_in_name = function(test){
 		var body = get_raw_email('email_accents');
-		test.equal("Lorem ipsum dolor sit amet, consectetur adipiscing elit.", EmailReplyParser.parse_reply(body));
+		test.equal("Lorem ipsum dolor sit amet, consectetur adipiscing elit.", BreezyEmailReplyParser.parse_reply(body));
 		test.done();
 };
 
 exports.test_parse_out_sent_from_iPhone_french = function(test){
 		var body = get_raw_email('email_iPhone_french');
-		test.equal("Here is another email", EmailReplyParser.parse_reply(body));
+		test.equal("Here is another email", BreezyEmailReplyParser.parse_reply(body));
 		test.done();
 };
 
@@ -206,37 +206,37 @@ exports.test_parse_gmail = function(test){
 
 exports.test_parse_out_sent_from_iPhone2 = function(test){
     var body = get_raw_email('email_iPhone2');
-    test.equal('Here is another email', EmailReplyParser.parse_reply(body));
+    test.equal('Here is another email', BreezyEmailReplyParser.parse_reply(body));
     test.done();
 };
 
 exports.test_parse_out_sent_from_iPhone3 = function(test){
 		var body = get_raw_email('email_iPhone3');
-		test.equal('Here is another email', EmailReplyParser.parse_reply(body));
+		test.equal('Here is another email', BreezyEmailReplyParser.parse_reply(body));
 		test.done();
 };
 
 exports.test_parse_out_send_from_french = function(test){
     var body = get_raw_email('email_french');
-    test.equal("On a 60% de test sur toute l'Infra", EmailReplyParser.parse_reply(body));
+    test.equal("On a 60% de test sur toute l'Infra", BreezyEmailReplyParser.parse_reply(body));
     test.done();
 };
 
 exports.test_parse_out_send_from_spanish = function(test){
     var body = get_raw_email('email_spanish');
-    test.equal("Muchas gracias.", EmailReplyParser.parse_reply(body));
+    test.equal("Muchas gracias.", BreezyEmailReplyParser.parse_reply(body));
     test.done();
 };
 
 exports.test_parse_out_send_from_hotmail = function(test){
     var body = get_raw_email('email_hotmail');
-    test.equal("I replied", EmailReplyParser.parse_reply(body));
+    test.equal("I replied", BreezyEmailReplyParser.parse_reply(body));
     test.done();
 }
 
 exports.test_email_with_emdash = function(test){
     var body = get_raw_email('email_em_dash');
-    test.equal("Hey There,\n\nSounds Good!\n\nBest,\nMe", EmailReplyParser.parse_reply(body));
+    test.equal("Hey There,\n\nSounds Good!\n\nBest,\nMe", BreezyEmailReplyParser.parse_reply(body));
     test.done();
 }
 
