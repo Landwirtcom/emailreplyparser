@@ -190,6 +190,20 @@ exports.test_parse_out_sent_from_iPhone_french = function(test){
 		test.done();
 };
 
+exports.test_correctly_removes_signature_under_quoted_no_newline = function(test){
+    var reply = get_email('email_1_9');
+    test.equal(3, reply.fragments.length);
+
+    test.deepEqual([false, true, false], _.map(reply.fragments, function(f) { return f.quoted; }));
+    test.deepEqual([false, true, true], _.map(reply.fragments, function(f) { return f.hidden; }));
+    test.deepEqual([false, false, true], _.map(reply.fragments, function(f) { return f.signature; }));
+
+    test.ok((new RegExp('^Dear recruiting team,\n\nThank you')).test(reply.fragments[0].to_s()));
+    test.ok((/^On [^\:]+\:/m).test(reply.fragments[1].to_s()));
+    test.ok((new RegExp('^--')).test(reply.fragments[2].to_s()));
+    test.done();
+};
+
 exports.test_correctly_reads_top_post_when_line_starts_with_On = function(test){
     var reply = get_email('email_1_7');
     test.equal(4, reply.fragments.length);
