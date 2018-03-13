@@ -142,6 +142,12 @@ exports.test_parse_out_sent_from_iPhone = function(test){
     test.done();
 };
 
+exports.test_parse_out_sent_from_Yahoo_Mail = function(test){
+    var body = get_raw_email('email_yahoo');
+    test.equal("Here is another email", BreezyEmailReplyParser.parse_reply(body));
+    test.done();
+};
+
 exports.test_parse_out_sent_from_BlackBerry = function(test){
     var body = get_raw_email('email_BlackBerry');
     test.equal("Here is another email", BreezyEmailReplyParser.parse_reply(body));
@@ -249,5 +255,11 @@ exports.test_email_with_reply_header_response = function(test){
     test.deepEqual([false, false, false], _.map(reply.fragments, function(f) { return f.signature; }));
 
     test.ok((new RegExp('^11 would be best.*wrote:$')).test(reply.fragments[0].to_s()));
+    test.done();
+}
+
+exports.test_spaces_before_reply_header = function(test){
+    var body = get_raw_email('spaces_before_reply_header');
+    test.equal("Ok just wanted to find out.", BreezyEmailReplyParser.parse_reply(body));
     test.done();
 }
