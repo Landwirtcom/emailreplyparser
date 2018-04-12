@@ -204,6 +204,20 @@ exports.test_correctly_removes_signature_under_quoted_no_newline = function(test
     test.done();
 };
 
+exports.test_correctly_removes_original_message_text = function(test){
+    var reply = get_email('email_1_10');
+    test.equal(2, reply.fragments.length);
+
+    test.deepEqual([false, false], _.map(reply.fragments, function(f) { return f.quoted; }));
+    test.deepEqual([false, true], _.map(reply.fragments, function(f) { return f.hidden; }));
+    test.deepEqual([false, true], _.map(reply.fragments, function(f) { return f.signature; }));
+
+    test.ok((new RegExp('^I\'ll be at the hideout')).test(reply.fragments[0].to_s()));
+    test.ok((new RegExp('^----- Original Message -----\n\n')).test(reply.fragments[1].to_s()));
+    test.done();
+};
+
+
 exports.test_correctly_reads_top_post_when_line_starts_with_On = function(test){
     var reply = get_email('email_1_7');
     test.equal(4, reply.fragments.length);
@@ -254,6 +268,12 @@ exports.test_parse_out_send_from_hotmail = function(test){
     test.done();
 }
 
+exports.test_parse_out_send_from_hotmail_2 = function(test){
+    var body = get_raw_email('email_hotmail_2');
+    test.equal("I replied", BreezyEmailReplyParser.parse_reply(body));
+    test.done();
+}
+
 exports.test_email_with_emdash = function(test){
     var body = get_raw_email('email_em_dash');
     test.equal("Hey There,\n\nSounds Good!\n\nBest,\nMe", BreezyEmailReplyParser.parse_reply(body));
@@ -275,5 +295,11 @@ exports.test_email_with_reply_header_response = function(test){
 exports.test_spaces_before_reply_header = function(test){
     var body = get_raw_email('spaces_before_reply_header');
     test.equal("Ok just wanted to find out.", BreezyEmailReplyParser.parse_reply(body));
+    test.done();
+}
+
+exports.test_indeed_email = function(test){
+    var body = get_raw_email('email_indeed');
+    test.equal("Hello. I have completed it. Thank you.", BreezyEmailReplyParser.parse_reply(body));
     test.done();
 }
