@@ -213,7 +213,7 @@ exports.test_correctly_removes_original_message_text = function(test){
     test.deepEqual([false, true], _.map(reply.fragments, function(f) { return f.signature; }));
 
     test.ok((new RegExp('^I\'ll be at the hideout')).test(reply.fragments[0].to_s()));
-    test.ok((new RegExp('^----- Original Message -----\n\n')).test(reply.fragments[1].to_s()));
+    test.ok((new RegExp('^----- Original Message -----')).test(reply.fragments[1].to_s()));
     test.done();
 };
 
@@ -246,7 +246,7 @@ exports.test_parse_out_sent_from_iPhone2 = function(test){
 
 exports.test_parse_out_sent_from_iPhone3 = function(test){
 		var body = get_raw_email('email_iPhone3');
-		test.equal('Here is another email', BreezyEmailReplyParser.parse_reply(body));
+		test.equal('Here is another email\n\nJohn Doe', BreezyEmailReplyParser.parse_reply(body));
 		test.done();
 };
 
@@ -282,11 +282,11 @@ exports.test_email_with_emdash = function(test){
 
 exports.test_email_with_reply_header_response = function(test){
     var reply = get_email('response_with_reply_header');
-    test.equal(3, reply.fragments.length);
+    test.equal(2, reply.fragments.length);
 
-    test.deepEqual([false, true, false], _.map(reply.fragments, function(f) { return f.quoted; }));
-    test.deepEqual([false, true, true], _.map(reply.fragments, function(f) { return f.hidden; }));
-    test.deepEqual([false, false, false], _.map(reply.fragments, function(f) { return f.signature; }));
+    test.deepEqual([false, true], _.map(reply.fragments, function(f) { return f.quoted; }));
+    test.deepEqual([false, true], _.map(reply.fragments, function(f) { return f.hidden; }));
+    test.deepEqual([false, false], _.map(reply.fragments, function(f) { return f.signature; }));
 
     test.ok((new RegExp('^11 would be best.*wrote:$')).test(reply.fragments[0].to_s()));
     test.done();
@@ -301,5 +301,11 @@ exports.test_spaces_before_reply_header = function(test){
 exports.test_indeed_email = function(test){
     var body = get_raw_email('email_indeed');
     test.equal("Hello. I have completed it. Thank you.", BreezyEmailReplyParser.parse_reply(body));
+    test.done();
+}
+
+exports.test_sig_no_spaces = function(test){
+    var body = get_raw_email('sig_no_spaces');
+    test.equal("Saina,\n\nESL teaching is not really my area of expertise. Thank you though.", BreezyEmailReplyParser.parse_reply(body));
     test.done();
 }
